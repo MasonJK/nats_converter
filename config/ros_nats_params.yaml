@@ -1,0 +1,3 @@
+server_url : "https://nats.beyless.com"
+nats_topics:
+  - "position_to_fix"
