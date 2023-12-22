@@ -4,7 +4,7 @@
 
 
 
-#include "nats/nats.h"
+#include "nats.h"
 #include "Poco/JSON/Object.h"
 
 namespace adcm

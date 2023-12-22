@@ -15,7 +15,6 @@ public:
     }
 
     void fixCallback(const sensor_msgs::NavSatFix::ConstPtr& msg){
-        std::cout<<"latidue : "<<msg->latitude<<", longitude : "<<msg->longitude<<std::endl;
         std::cout<<"NATS Publish : JSON"<<std::endl;
         
         manager->ClearJsonData();
@@ -45,8 +44,8 @@ int main(int argc, char** argv){
 
     RosNatsConverter converter(natsManager);
 
-    while(status == NATS_OK){
-        std::cout<<"came in here"<<std::endl;
+    while(ros::ok()){
+        // std::cout<<"came in here"<<std::endl;
         if(status == NATS_OK){
             ros::spinOnce();
         }else{

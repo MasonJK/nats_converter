@@ -170,9 +170,9 @@ natsStatus NatsConnManager::NatsConnection()
         }
 
         // For maximum performance, set no limit on the number of pending messages.
-        if(s == NATS_OK && subscribeFlag == Mode::Publish_Only) {
-            s = natsSubscription_SetPendingLimits(sub, -1, -1);
-        }
+        // if(s == NATS_OK && subscribeFlag == Mode::Publish_Only) {
+        //     s = natsSubscription_SetPendingLimits(sub, -1, -1);
+        // }
     }
     
     if(s == NATS_OK) {

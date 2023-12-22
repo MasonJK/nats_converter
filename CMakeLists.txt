@@ -23,7 +23,7 @@ find_package(
 )
 
 # nats
-find_library(NATS_LIB nats REQUIRED)
+find_library(NATS_LIB NAMES nats libnats HINTS /home/wm_robot1/catkin_ws/src/nats.c/build/src)
 
 ## Generate messages in the 'msg' folder
 # add_message_files(
@@ -99,14 +99,14 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
+# Assuming nats.h is in nats.c/src
+find_path(NATS_INCLUDE_DIR NAMES nats.h HINTS /home/wm_robot1/catkin_ws/src/nats.c/src)
+include_directories(${NATS_INCLUDE_DIR})
+
 add_library(nats_converter src/NatsConnManager.cpp)
 target_include_directories(nats_converter PRIVATE ${Boost_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/include)
 target_link_libraries(nats_converter PRIVATE ${NATS_LIB} Poco::Net Poco::Foundation Poco::JSON)
 
-
 add_executable(converter src/converter.cpp)
 add_dependencies(converter ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(converter nats_converter
-  ${catkin_LIBRARIES}
-  Poco::JSON
-)
+target_link_libraries(converter nats_converter ${catkin_LIBRARIES} Poco::JSON)
