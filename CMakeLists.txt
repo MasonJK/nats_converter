@@ -107,6 +107,8 @@ add_library(nats_converter src/NatsConnManager.cpp)
 target_include_directories(nats_converter PRIVATE ${Boost_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/include)
 target_link_libraries(nats_converter PRIVATE ${NATS_LIB} Poco::Net Poco::Foundation Poco::JSON)
 
+
 add_executable(converter src/converter.cpp)
 add_dependencies(converter ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(converter nats_converter ${catkin_LIBRARIES} Poco::JSON)
+target_link_libraries(converter nats_converter ${NATS_LIB} ${catkin_LIBRARIES} Poco::JSON)
+

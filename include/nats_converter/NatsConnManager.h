@@ -30,6 +30,7 @@ public:
         Default,
         Publish_Only,
     };
+    NatsConnManager();
     NatsConnManager(const char * serverUrl, const std::vector<const char*> subjects, Mode mode = Mode::Default);  //For only Publish_Only;
     NatsConnManager(const char * serverUrl, const std::vector<const char*> subjects, natsMsgHandler onMsgFunc, natsErrHandler asyncFunc, Mode mode = Mode::Default);
     ~NatsConnManager();

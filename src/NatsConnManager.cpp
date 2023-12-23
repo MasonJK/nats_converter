@@ -55,13 +55,13 @@ natsStatus NatsConnManager::NatsExecute()
 
     if (s == NATS_OK) 
     {
-        std::cout << "NATS Connection" << std::endl;
+        std::cout << "NATS CreateNetsOptions" << std::endl;
         s = NatsConnection();
     }
 
     if (s != NATS_OK) 
     {
-        std::cout << "NATS ConnectionFail" << std::endl;
+        std::cout << "NATS CreateNetsOptions Fail" << std::endl;
     }
 
     if (s != NATS_OK)
@@ -96,7 +96,7 @@ natsStatus NatsConnManager::NatsCreateNetsOptions()
         if(parseUrls(mServerUrl, serverUrls, &numOfServer) != false) {
             //std::cout << "num of server : " << (int)numOfServer << std::endl;
             for(int i = 0 ; i < numOfServer ; i++) {
-                std::cout  << "[" << i << "]"<< serverUrls[i] << std::endl;
+                std::cout  << "[" << i << "] : "<< serverUrls[i] << std::endl;
             }
 
             std::cout << "SetServer..." << std::endl;
@@ -118,7 +118,7 @@ natsStatus NatsConnManager::NatsCreateNetsOptions()
         std::cout << "Not want subscribe..." << std::endl;
         std::cout << "skip natsOptions_SetErrorHandler()" << std::endl;
     } else if(asyncCb != NULL) {
-        s = natsOptions_SetErrorHandler(opts, asyncCb, NULL);
+        s = natsOptions_SetErrorHandler(opts, asyncCb, this);
 
     } else {
         s = NATS_ERR;
@@ -337,6 +337,9 @@ void NatsConnManager::NatsMsgDestroy(natsMsg* msg)
 void NatsConnManager::NatsSubscriptionGetDropped(natsSubscription* sub, int64_t* msgs)
 {
     natsSubscription_GetDropped(sub, msgs);
+}
+
+NatsConnManager::NatsConnManager(){
 }
 
 NatsConnManager::NatsConnManager(const char * serverUrl, const std::vector<const char*> subject, Mode mode)
