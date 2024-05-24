@@ -12,8 +12,8 @@ class RosNatsConverter{
 public:
     RosNatsConverter(natsMsgHandler msgCb, natsErrHandler errCb, adcm::etc::NatsConnManager::Mode mode = adcm::etc::NatsConnManager::Mode::Default) : msgCb(msgCb), errCb(errCb), mode(mode){
         ros::NodeHandle nh;
-        ros_topic_name = "/position_to_fix";
-        nats_subjects = {"test1.*", "test2.*"};
+        ros_topic_name = "/transformed_fix";
+        nats_subjects = {"sensorData.*", "test2.*"};
         server_url = "https://nats.beyless.com";
 
         fix_subscriber = nh.subscribe(ros_topic_name, 10, &RosNatsConverter::fixCallback, this);
@@ -22,15 +22,15 @@ public:
     }
 
     void fixCallback(const sensor_msgs::NavSatFix::ConstPtr& msg){
-        std::cout<<"NATS Publish : JSON"<<std::endl;
+        // std::cout<<"NATS Publish : JSON"<<std::endl;
         
         natsManager.ClearJsonData();
-        natsManager.addJsonData("latitude", msg->latitude);
-        natsManager.addJsonData("longitude",msg->longitude);
+        natsManager.addJsonData("long",msg->longitude);
+        natsManager.addJsonData("lat", msg->latitude);
 
         natsManager.PrintSendData();
         // natsManager.NatsPublishJson(ros_topic_name);
-        natsManager.NatsPublishJson("test1.json");
+        natsManager.NatsPublishJson("sensorData.json");
     }
 
     void initialize_nats_client(){
@@ -71,31 +71,16 @@ void asyncCb(natsConnection* nc, natsSubscription* sub, natsStatus err, void* cl
     
     std::cout << "Async error: " << err << " - " << natsStatus_GetText(err) << std::endl;
     manager->NatsSubscriptionGetDropped(sub, (int64_t*) &manager->dropped);
-    // natsSubscription_GetDropped(sub, msgs);
 }
 
 void onMsg(natsConnection* nc, natsSubscription* sub, natsMsg* msg, void* closure)
 {
     const char* subject = NULL;
 
-    // 뮤텍스를 사용하여 공유 변수 접근 보호
     std::lock_guard<std::mutex> lock(mtx);
     subject = natsMsg_GetSubject(msg);
 
     std::cout << "Received msg: [" << subject << " : " << natsMsg_GetDataLength(msg) << "]" << natsMsg_GetData(msg) << std::endl;
-    // We should be using a mutex to protect those variables since
-    // they are used from the subscription's delivery and the main
-    // threads. For demo purposes, this is fine.
-    
-    // std::istringstream iss(subject);
-    // std::vector<std::string> words;
-    // std::string word;
-
-    // while (std::getline(iss, word, '.')) 
-    // {
-    //     words.push_back(word);
-    // }
-    // std::cout << words[0] << " Data Category : " << words[1] << std::endl;
 
     natsMsg_Destroy(msg);
 }

@@ -8,7 +8,7 @@ def publish_navsat():
     rospy.init_node('navsat_publisher', anonymous=True)
 
     # Create a Publisher
-    pub = rospy.Publisher('/position_to_fix', NavSatFix, queue_size=10)
+    pub = rospy.Publisher('/transformed_fix', NavSatFix, queue_size=10)
 
     # Set the rate of publishing
     rate = rospy.Rate(1) # 1 Hz

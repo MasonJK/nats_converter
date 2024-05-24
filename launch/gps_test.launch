@@ -1,5 +1,3 @@
 <launch>
     <node pkg="nats_converter" type="converter" name="nats_converter" output="screen"/>
-
-    <node pkg="nats_converter" type="gps_test.py" name="navsat_publisher" output="screen"/>
 </launch>
